@@ -1,2 +1,2 @@
 # State-Employee-Salaries
-State Employee Salaries Web Scrape and Short Analysis by Agency
+State Employee Salaries Web Scrape and Analysis by Agency
