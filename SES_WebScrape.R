@@ -33,7 +33,8 @@ library(lubridate)
 source_url = "https://www.in.gov/apps/gov/salaries/"
 
 get_firstStep <- function(agency) {
-  agency <- agency %>% str_replace_all(" ", "+")
+  agency <- agency %>% str_replace_all(" ", "+") %>% str_replace_all("&", "%26") %>% 
+    str_replace_all('"',"%27")
   example_url <- "https://www.in.gov/apps/gov/salaries/?searchPerformed=true&firstName=&lastName=&agency=HEALTH&offset=0&max=25"
   new_url <- example_url %>% str_replace("HEALTH", agency)
   return(new_url)
@@ -90,8 +91,12 @@ getData <- function(agency_name) {
 
 #specify agency of interest here 
 #make sure it matches the tool's name for the agency (visit link above to check naming)
+
 #health_data <- getData("HEALTH")
 mph_data <- getData("MANAGEMENT PERF HUB")
+#fssa_admin <- getData("FAMILY & SOCIAL SVCS ADMIN")
+# workerscomp_data <- getData("WORKER'S COMP BRD")
+
 
 # 4) Export data just scraped ####
 
@@ -102,11 +107,17 @@ build_exportURL <- function(dataset){
   return(export_url)
 }
 
-export_url <- build_exportURL(health_data)
-export(health_data,export_url)
+# export_url <- build_exportURL(health_data)
+# export(health_data,export_url)
 
 export_url <- build_exportURL(mph_data)
 export(mph_data,export_url)
+
+# export_url <- build_exportURL(fssa_admin)
+# export(fssa_admin,export_url)
+
+# export_url <- build_exportURL(workerscomp_data)
+# export(workerscomp_data,export_url)
 
 #data is export to an excel file which is now in your working directory see 'export_url' for path
 
