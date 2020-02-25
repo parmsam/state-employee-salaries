@@ -72,30 +72,36 @@ my_dataPull <- function(list_url){
     #print(i)
     SalariesData2<-rbind(SalariesData2,data.frame(SalariesData[i])) # get rest data pulls for agency
   }
-  SalariesData2 %>%  mutate(pull_date=today())
-  SalariesData2<-unique(SalariesData2) 
+  #SalariesData2 %>% mutate(pull_date=today())
+  SalariesData2 <- unique(SalariesData2) 
   return(SalariesData2)
 }
 
+getData <- function(agency_name) {
+  ISDH_URLlist<- get_firstStep(agency_name) %>% 
+    get_lastStep() %>% 
+    get_URLlist()
+  health_data <- my_dataPull(ISDH_URLlist)
+  return(health_data)
+}
 # 3) Scrape data for agency of interest using functions created ####
 
 #specify agency of interest here 
 #make sure it matches the tool's name for the agency (visit link above to check naming)
-ISDH_URLlist<- get_firstStep("HEALTH") %>% 
-  get_lastStep() %>% 
-  get_URLlist()
-
-health_data <- my_dataPull(ISDH_URLlist)
-
-#modify the export as needed
-#this can last process can also be made into a function
+health_data <- getData("HEALTH")
 
 # 4) Export data just scraped ####
-export_url <- paste(getwd(),"/SalariesData_",
-                    health_data[1,3],"_",
-                    today(),".csv",sep="")
 
+build_exportURL <- function(dataset){
+  export_url <- paste(getwd(),"/SalariesData_",
+                      dataset[1,3],"_",
+                      today(),".csv",sep="")
+  return(export_url)
+}
+
+export_url <- build_exportURL(health_data)
 export(health_data,export_url)
+
 #data is export to an excel file which is now in your working directory see 'export_url' for path
 
 # X) Clean up. ----
