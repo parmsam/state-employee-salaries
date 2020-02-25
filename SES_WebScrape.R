@@ -33,12 +33,14 @@ library(lubridate)
 source_url = "https://www.in.gov/apps/gov/salaries/"
 
 get_firstStep <- function(agency) {
+  agency <- agency %>% str_replace_all(" ", "+")
   example_url <- "https://www.in.gov/apps/gov/salaries/?searchPerformed=true&firstName=&lastName=&agency=HEALTH&offset=0&max=25"
   new_url <- example_url %>% str_replace("HEALTH", agency)
   return(new_url)
 }
 
 get_lastStep <- function(url) {
+  webpage <- read_html(url)
   tbls_ls2 <- webpage %>%
     html_nodes("a.step") %>% html_attr("href")
   tbls_ls2<-data.frame(tbls_ls2) 
@@ -88,7 +90,8 @@ getData <- function(agency_name) {
 
 #specify agency of interest here 
 #make sure it matches the tool's name for the agency (visit link above to check naming)
-health_data <- getData("HEALTH")
+#health_data <- getData("HEALTH")
+mph_data <- getData("MANAGEMENT PERF HUB")
 
 # 4) Export data just scraped ####
 
@@ -101,6 +104,9 @@ build_exportURL <- function(dataset){
 
 export_url <- build_exportURL(health_data)
 export(health_data,export_url)
+
+export_url <- build_exportURL(mph_data)
+export(mph_data,export_url)
 
 #data is export to an excel file which is now in your working directory see 'export_url' for path
 
