@@ -30,6 +30,10 @@ library(lubridate)
 
 # 2) Develop functions to pull data from web tool  ####
 
+## get vector of dept options
+dept_vector <- read_html("https://www.in.gov/apps/gov/salaries/") %>% html_node("body") %>% html_nodes("option") %>% html_text()
+dept_vector <- dept_vector[dept_vector != ""]
+
 source_url = "https://www.in.gov/apps/gov/salaries/"
 
 get_firstStep <- function(agency) {
